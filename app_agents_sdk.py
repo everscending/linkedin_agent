@@ -1,6 +1,7 @@
+import uuid
 from dotenv import load_dotenv
 from openai import AsyncOpenAI
-from agents import Agent, Runner, function_tool, OpenAIChatCompletionsModel 
+from agents import Agent, Runner, function_tool, OpenAIChatCompletionsModel, SQLiteSession
 import os
 from pypdf import PdfReader
 import gradio as gr
@@ -80,6 +81,8 @@ class Me:
             tools=tools,
         )
 
+        # Create a new session
+        self.session = SQLiteSession(session_id=str(uuid.uuid4()))
         self.agent = agent
     
     def system_prompt(self) -> str:
@@ -97,9 +100,9 @@ Be professional and engaging, as if talking to a potential client or future empl
         print ('system_prompt...', system_prompt, flush=True)
         return system_prompt
     
-    async def chat(self, message) -> str:
+    async def chat(self, message, history) -> str:
 
-        result = await Runner.run(self.agent, message)
+        result = await Runner.run(self.agent, message, session=self.session)
         return result.final_output
 
 if __name__ == "__main__":
