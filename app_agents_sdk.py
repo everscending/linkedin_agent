@@ -16,7 +16,7 @@ def mailtrapSendEmail(text, subject="New website message"):
 
     # Create mail object
     mail = mt.Mail(
-        sender=mt.Address(email="hello@demomailtrap.co"),
+        sender=mt.Address(email="info@everscending.org"),
         to=[mt.Address(email=email)],
         subject=subject,
         text=text,
